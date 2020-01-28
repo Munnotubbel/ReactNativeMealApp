@@ -5,6 +5,10 @@ import { AppLoading } from "expo";
 
 import MealsNavigator from "./navigation/MealsNavigator";
 
+//no big difference in the look but better performance
+import { useScreens } from "react-native-screens";
+useScreens();
+
 const fetchFonts = () => {
   return Font.loadAsync({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),

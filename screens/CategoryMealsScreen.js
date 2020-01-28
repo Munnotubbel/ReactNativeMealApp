@@ -1,27 +1,42 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
-import { CATEGORIES } from "../data/dummy-data";
+import { View, Text, StyleSheet, FlatList } from "react-native";
+import { CATEGORIES, MEALS } from "../data/dummy-data";
+import MealItem from "../components/MealItem";
+
 const CatergoryMealsScreen = props => {
-  // const catId = props.navigation.getParam("categoryID");
+  const renderMealItem = ItemData => {
+    return (
+      <MealItem
+        title={ItemData.item.title}
+        image={ItemData.item.imageUrl}
+        duration={ItemData.item.duration}
+        complexity={ItemData.item.complexity}
+        affordability={ItemData.item.affordability}
+        onSelectMeal={() => {
+          props.navigation.navigate({
+            routeName: "MealDetails",
+            params: {
+              mealId: ItemData.item.id
+            }
+          });
+        }}
+      />
+    );
+  };
+
+  const catId = props.navigation.getParam("categoryId");
+
+  const displayedMeals = MEALS.filter(
+    meal => meal.categoryIds.indexOf(catId) >= 0
+  );
 
   return (
     <View style={styles.screen}>
-      <Text>The Categories Meals Screen</Text>
-      <Text>{selectedCategory.title}</Text>
-      <Button
-        title="Go to Details"
-        onPress={() => {
-          // or props.navigation.push("MealDetails") stacks even same screen on top
-          props.navigation.navigate({ routeName: "MealDetails" });
-        }}
-      />
-
-      <Button
-        title="Go Back"
-        onPress={() => {
-          //props.navigation.pop()   pop upper stack away
-          props.navigation.goBack();
-        }}
+      <FlatList
+        data={displayedMeals}
+        keyExtractor={(item, index) => item.id}
+        renderItem={renderMealItem}
+        style={{ width: "95%" }}
       />
     </View>
   );
