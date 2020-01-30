@@ -1,17 +1,10 @@
-import React from "react";
-import {
-  ScrollView,
-  View,
-  Image,
-  Text,
-  Button,
-  StyleSheet
-} from "react-native";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import React, { useEffect } from 'react';
+import { ScrollView, View, Image, Text, StyleSheet } from 'react-native';
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import { useSelector } from 'react-redux';
 
-import { MEALS } from "../data/dummy-data";
-import HeaderButton from "../components/HeaderButton";
-import DefaultText from "../components/DefaultText";
+import HeaderButton from '../components/HeaderButton';
+import DefaultText from '../components/DefaultText';
 
 const ListItem = props => {
   return (
@@ -22,9 +15,14 @@ const ListItem = props => {
 };
 
 const MealDetailScreen = props => {
-  const mealId = props.navigation.getParam("mealId");
+  const availableMeals = useSelector(state => state.meals.meals);
+  const mealId = props.navigation.getParam('mealId');
 
-  const selectedMeal = MEALS.find(meal => meal.id === mealId);
+  const selectedMeal = availableMeals.find(meal => meal.id === mealId);
+
+  // useEffect(() => {
+  //   props.navigation.setParams({ mealTitle: selectedMeal.title });
+  // }, [selectedMeal]);
 
   return (
     <ScrollView>
@@ -47,17 +45,18 @@ const MealDetailScreen = props => {
 };
 
 MealDetailScreen.navigationOptions = navigationData => {
-  const mealId = navigationData.navigation.getParam("mealId");
-  const selectedMeal = MEALS.find(meal => meal.id === mealId);
+  const mealId = navigationData.navigation.getParam('mealId');
+  const mealTitle = navigationData.navigation.getParam('mealTitle');
+  // const selectedMeal = MEALS.find(meal => meal.id === mealId);
   return {
-    headerTitle: selectedMeal.title,
+    headerTitle: mealTitle,
     headerRight: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Favorite"
           iconName="ios-star"
           onPress={() => {
-            console.log("Mark as favorite!");
+            console.log('Mark as favorite!');
           }}
         />
       </HeaderButtons>
@@ -67,23 +66,23 @@ MealDetailScreen.navigationOptions = navigationData => {
 
 const styles = StyleSheet.create({
   image: {
-    width: "100%",
+    width: '100%',
     height: 200
   },
   details: {
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 15,
-    justifyContent: "space-around"
+    justifyContent: 'space-around'
   },
   title: {
-    fontFamily: "open-sans-bold",
+    fontFamily: 'open-sans-bold',
     fontSize: 22,
-    textAlign: "center"
+    textAlign: 'center'
   },
   listItem: {
     marginVertical: 10,
     marginHorizontal: 20,
-    borderColor: "#ccc",
+    borderColor: '#ccc',
     borderWidth: 1,
     padding: 10
   }
