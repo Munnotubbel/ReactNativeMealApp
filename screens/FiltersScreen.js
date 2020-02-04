@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, StyleSheet, Switch, Platform } from 'react-native';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons';
-
-import HeaderButton from '../components/HeaderButton';
-import Colors from '../constants/Colors';
-
+import React, { useState, useEffect, useCallback } from "react";
+import { View, Text, StyleSheet, Switch, Platform } from "react-native";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useDispatch } from "react-redux";
+import HeaderButton from "../components/HeaderButton";
+import Colors from "../constants/Colors";
+import { setFilters } from "../store/actions/mealsActions";
 const FilterSwitch = props => {
   return (
     <View style={styles.filterContainer}>
       <Text>{props.label}</Text>
       <Switch
         trackColor={{ true: Colors.primaryColor }}
-        thumbColor={Platform.OS === 'android' ? Colors.primaryColor : ''}
+        thumbColor={Platform.OS === "android" ? Colors.primaryColor : ""}
         value={props.state}
         onValueChange={props.onChange}
       />
@@ -26,17 +26,18 @@ const FiltersScreen = props => {
   const [isLactoseFree, setIsLactoseFree] = useState(false);
   const [isVegan, setIsVegan] = useState(false);
   const [isVegetarian, setIsVegetarian] = useState(false);
+  const dispatch = useDispatch();
 
   const saveFilters = useCallback(() => {
     const appliedFilters = {
       glutenFree: isGlutenFree,
       lactoseFree: isLactoseFree,
       vegan: isVegan,
-      isVegetarian: isVegetarian
+      vegetarian: isVegetarian
     };
 
-    console.log(appliedFilters);
-  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian]);
+    dispatch(setFilters(appliedFilters));
+  }, [isGlutenFree, isLactoseFree, isVegan, isVegetarian, dispatch]);
 
   useEffect(() => {
     navigation.setParams({ save: saveFilters });
@@ -71,7 +72,7 @@ const FiltersScreen = props => {
 
 FiltersScreen.navigationOptions = navData => {
   return {
-    headerTitle: 'Filter Meals',
+    headerTitle: "Filter Meals",
     headerLeft: (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
@@ -88,7 +89,7 @@ FiltersScreen.navigationOptions = navData => {
         <Item
           title="Save"
           iconName="ios-save"
-          onPress={navData.navigation.getParam('save')}
+          onPress={navData.navigation.getParam("save")}
         />
       </HeaderButtons>
     )
@@ -98,19 +99,19 @@ FiltersScreen.navigationOptions = navData => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    alignItems: 'center'
+    alignItems: "center"
   },
   title: {
-    fontFamily: 'open-sans-bold',
+    fontFamily: "open-sans-bold",
     fontSize: 22,
     margin: 20,
-    textAlign: 'center'
+    textAlign: "center"
   },
   filterContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '80%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "80%",
     marginVertical: 15
   }
 });
